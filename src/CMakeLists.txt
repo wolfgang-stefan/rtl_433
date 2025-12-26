@@ -174,8 +174,10 @@ add_library(r_433 STATIC
     devices/lacrosse_tx31u.c
     devices/lacrosse_tx34.c
     devices/lacrosse_tx35.c
+    devices/lacrosse_wl1.c
     devices/lacrosse_wr1.c
     devices/lacrosse_ws7000.c
+    devices/lacrosse_wsdr1.c
     devices/lacrossews.c
     devices/lightwave_rf.c
     devices/m_bus.c
