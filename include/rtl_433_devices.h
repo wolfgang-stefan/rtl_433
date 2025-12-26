@@ -298,6 +298,8 @@
     DECL(oria_wa150km) \
     DECL(ec3k) \
     DECL(orion_endpoint_2020) \
+    DECL(lacrosse_wl1) \
+    DECL(lacrosse_wsdr1) \
 
     /* Add new decoders here. */
 
