@@ -328,6 +328,9 @@
     DECL(rfm69_lowpowerlab_moteino) \
     DECL(shenzhen_wale_wl_th6r) \
     DECL(ctt_life_power_hybrid) \
+    DECL(lacrosse_wl1) \
+    DECL(lacrosse_wsdr1) \
+
     /* Add new decoders here. */
 
 #define DECL(name) extern r_device name;

@@ -112,16 +112,19 @@ static int lacrosse_r1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
     uint8_t const preamble_pattern[] = {0xd2, 0xaa, 0x2d, 0xd4};
 
     uint8_t b[20];
+    //uint8_t b_all[200];
 
     if (bitbuffer->num_rows > 1) {
         decoder_logf(decoder, 1, __func__, "Too many rows: %d", bitbuffer->num_rows);
         return DECODE_FAIL_SANITY;
     }
     int msg_len = bitbuffer->bits_per_row[0];
-    if (msg_len < 170) { // allows shorter preamble for LTV-R3 (>200) and TFA 30.3802.02 (on 868MHz around 177)
+    //if (msg_len < 170) { // allows shorter preamble for LTV-R3 (>200) and TFA 30.3802.02 (on 868MHz around 177)
+    if (msg_len < 156) { // allows shorter preamble for LTV-R3 (>200) and TFA 30.3802.02 (on 868MHz around 177)
         decoder_logf(decoder, 1, __func__, "Packet too short: %d bits", msg_len);
         return DECODE_ABORT_LENGTH;
-    } else if (msg_len > 272) {
+    //} else if (msg_len > 272) {
+    } else if (msg_len > 290) {
         decoder_logf(decoder, 1, __func__, "Packet too long: %d bits", msg_len);
         return DECODE_ABORT_LENGTH;
     } else {
@@ -141,6 +144,7 @@ static int lacrosse_r1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
 
     int rev = 1;
     int chk = crc8(b, 11, 0x31, 0x00);
+    
     if (chk == 0
             && b[4] == 0xaa && b[5] == 0xaa && b[6] == 0xaa
             && (b[8] & 0x0f) == 0x0a && b[9] == 0xaa) {
@@ -156,8 +160,10 @@ static int lacrosse_r1_decode(r_device *decoder, bitbuffer_t *bitbuffer)
             return DECODE_FAIL_MIC;
         }
     }
-
-    decoder_log_bitrow(decoder, 1, __func__, b, bitbuffer->bits_per_row[0] - offset, "");
+    if((b[0] & 0xf0) >> 4 != 3){
+        decoder_log(decoder, 1, __func__, "Wrong device!");
+        return DECODE_FAIL_MIC;
+    }
 
     // Note that the rain zero value is 00aa00 with a known byte order of HH??LL.
     // We just prepend the middle byte and assume whitening. Let's hope we get feedback someday.
