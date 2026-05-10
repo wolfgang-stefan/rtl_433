@@ -10,20 +10,22 @@ Actively tested and supported are Realtek RTL2832 based DVB dongles (using RTL-S
 
 ![rtl_433 screenshot](./docs/screenshot.png)
 
-## Building / Installation
+## Building
 
-rtl_433 is written in portable C (C99 standard) and known to compile on Linux (also embedded), MacOS, and Windows systems.
+rtl_433 is written in portable C (C99 standard) and known to compile on Linux (also embedded), FreeBSD, MacOS, and Windows systems.
 Older compilers and toolchains are supported as a key-goal.
-Low resource consumption and very few dependencies allow rtl_433 to run on embedded hardware like (repurposed) routers.
-Systems with 32-bit i686 and 64-bit x86-64 as well as (embedded) ARM, like the Raspberry Pi and PlutoSDR are well supported.
+Low resource consumption and very few dependencies allow rtl_433 to run on embedded hardware.
+Most common 32-bit and 64-bit CPU architectures like amd64, arm64, armhf, i386, ppc64el, riscv64, s390x and others are well supported.
 
 See [BUILDING.md](docs/BUILDING.md)
 
-On Debian (sid) or Ubuntu (19.10+), `apt-get install rtl-433` for other distros check https://repology.org/project/rtl-433/versions
+## Installation
 
-On FreeBSD, `pkg install rtl-433`.
+Linux (Debian, Ubuntu): `sudo apt install rtl-433`. For other distributions see [repology](https://repology.org/project/rtl-433/versions) or [pkgs.org](https://pkgs.org/download/rtl-433).
 
-On MacOS, `brew install rtl_433`.
+FreeBSD: `pkg install rtl-433`.
+
+MacOS: `brew install rtl_433`.
 
 Docker images with rtl_433 are available [on the github page of hertzg](https://github.com/hertzg/rtl_433_docker).
 
@@ -227,7 +229,7 @@ See [CONTRIBUTING.md](./docs/CONTRIBUTING.md).
     [139]  Norgo NGE101
     [140]  Elantra2012 TPMS
     [141]  Auriol HG02832, HG05124A-DCF, Rubicson 48957 temperature/humidity sensor
-    [142]  Fine Offset Electronics/ECOWITT WH51, SwitchDoc Labs SM23 Soil Moisture Sensor
+    [142]  Fine Offset Electronics/Ecowitt WH51, WN31, SwitchDoc Labs SM23 Soil Moisture Sensor
     [143]  Holman Industries iWeather WS5029 weather station (older PWM)
     [144]  TBH weather sensor
     [145]  WS2032 weather station
@@ -241,7 +243,7 @@ See [CONTRIBUTING.md](./docs/CONTRIBUTING.md).
     [153]  Cotech 36-7959, SwitchDocLabs FT020T wireless weather station with USB
     [154]  Standard Consumption Message Plus (SCMplus)
     [155]  Fine Offset Electronics WH1080/WH3080 Weather Station (FSK)
-    [156]  Abarth 124 Spider TPMS
+    [156]  Abarth 124 Spider and Shenzhen EGQ Q85 TPMS
     [157]  Missil ML0757 weather station
     [158]  Sharp SPC775 weather station
     [159]  Insteon
@@ -300,7 +302,7 @@ See [CONTRIBUTING.md](./docs/CONTRIBUTING.md).
     [212]  Renault 0435R TPMS
     [213]  Fine Offset Electronics WS80 weather station
     [214]  EMOS E6016 weatherstation with DCF77
-    [215]  Emax W6, rebrand Altronics x7063/4, Optex 990040/50/51, Orium 13093/13123, Infactory FWS-1200, Newentor Q9, Otio 810025, Protmex PT3390A, Jula Marquant 014331/32, TechniSat IMETEO X6 76-4924-00, Weather Station or temperature/humidity sensor
+    [215]  Emax W6, rebrand Altronics x7063/4/x7064A, Optex 990040/50/51, Orium 13093/13123, Infactory FWS-1200, Newentor Q9, Otio 810025, Protmex PT3390A, Jula Marquant 014331/32, TechniSat IMETEO X6 76-4924-00, Weather Station or temperature/humidity sensor
     [216]* ANT and ANT+ devices
     [217]  EMOS E6016 rain gauge
     [218]  Microchip HCS200/HCS300 KeeLoq Hopping Encoder based remotes (FSK)
@@ -362,7 +364,7 @@ See [CONTRIBUTING.md](./docs/CONTRIBUTING.md).
     [274]  Revolt ZX-7717 power meter
     [275]  GM-Aftermarket TPMS
     [276]  RainPoint HCS012ARF Rain Gauge sensor
-    [277]  Apator Metra E-RM 30
+    [277]  Apator Metra E-RM 30 water meter
     [278]  ThermoPro TX-7B Outdoor Thermometer Hygrometer
     [279]  Nexus, CRX, Prego sauna temperature sensor
     [280]  Homelead HG9901 (Geevon, Dr.Meter, Royal Gardineer) soil moisture/temp/light level sensor
@@ -376,6 +378,36 @@ See [CONTRIBUTING.md](./docs/CONTRIBUTING.md).
     [288]  Oria WA150KM freezer and fridge thermometer
     [289]  Voltcraft EnergyCount 3000 (ec3k)
     [290]  Orion Endpoint from Badger Meter, GIF2020OCECNA, water meter, hopping from 904.4 Mhz to 924.6Mhz (-s 1600k)
+    [291]  Geevon TX19-1 outdoor sensor
+    [292]  WallarGe CLTX001 Outdoor Temperature Sensor
+    [293]  Sainlogic SA8, Gevanti SA8 Weather Station
+    [294]  ThermoPro TP862b TempSpike XR Wireless Dual-Probe Meat Thermometer
+    [295]  Airpuxem TPMS TYH11_EU6_ZQ
+    [296]  Apator Metra E-ITN 30 heat cost allocator
+    [297]  ThermoPro TP211B Thermometer
+    [298]  TRW TPMS OOK OEM and Clone models
+    [299]  TRW TPMS FSK OEM and Clone models
+    [300]  Govee Water Leak Detector H5059
+    [301]  Astrostart 2000 Car Remote (-f 372.4M)
+    [302]  Compustar 1WG3R Car Remote
+    [303]  Chrysler Car Remote (-f 315.1M -s 920k)
+    [304]  Nidec Car Remote (-f 313.8M -s 1024k)
+    [305]  Audiovox PRO-OE3B Car Remote (-f 303.4M)
+    [306]  Microchip HCS361 KeeLoq Hopping Encoder based remotes (-f 315.1M) (Sync, 833 bit/s)
+    [307]  Microchip HCS361 KeeLoq Hopping Encoder based remotes (-f 315.1M) (Sync, 1667 bit/s)
+    [308]  Microchip HCS361 KeeLoq Hopping Encoder based remotes (-f 315.1M) (No Sync, 833 bit/s)
+    [309]  Microchip HCS361 KeeLoq Hopping Encoder based remotes (-f 315.1M) (No Sync, 1667 bit/s)
+    [310]  Microchip HCS361 KeeLoq Hopping Encoder based remotes (-f 315.1M) (PIWM, 2500 bit/s)
+    [311]  Microchip HCS361 KeeLoq Hopping Encoder based remotes (-f 315.1M) (PIWM, 5000 bit/s)
+    [312]  MIC 6SC2 Car Remote (-f 315.1M)
+    [313]  GM ABO1502T Car Remote (-f 314.9M)
+    [314]  Siemens 5WY72XX Car Remote (-f 315.1M)
+    [315]  Alps FWB1U545 Car Remote
+    [316]  Continental KR5V2X Car Remote (-f 313.8M -s 1024k)
+    [317]  Code Alarm FRDPC2002 Car Remote
+    [318]  RFM69 LowPowerLab Moteino board (-s 1000k)
+    [319]  Shenzhen Wale WL-TH6R Temperature & Humidity Sensor
+    [320]  Cellular Tracking Technologies LifeTag/PowerTag/HybridTag
     [291]  LaCrosse Technology View LTV-WL1 Water Leak & Temperature Sensor
     [292]  LaCrosse Technology View LTV-WSDR1 Cyclone Wind and Rain Sensor
 
@@ -450,7 +482,7 @@ Available options are:
 		use opt>=n to match at least <n> and opt<=n to match at most <n>
 	invert : invert all bits
 	reflect : reflect each byte (MSB first to MSB last)
-	decode_uart : UART 8n1 (10-to-8) decode
+	decode_uart=<8n1|8n2|8o1> : UART 8n1 (10-to-8), 8n2, 8o1 (11-to-8) decode
 	decode_dm : Differential Manchester decode
 	decode_mc : Manchester decode
 	match=<bits> : only match if the <bits> are found

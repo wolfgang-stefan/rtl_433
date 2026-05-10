@@ -21,6 +21,7 @@ add_library(r_433 STATIC
     jsmn.c
     list.c
     logger.c
+    microtar.c
     mongoose.c
     optparse.c
     output_file.c
@@ -41,6 +42,7 @@ add_library(r_433 STATIC
     rfraw.c
     samp_grab.c
     sdr.c
+    sigmf.c
     term_ctl.c
     write_sigrok.c
     devices/abmt.c
@@ -48,15 +50,19 @@ add_library(r_433 STATIC
     devices/acurite_01185m.c
     devices/akhan_100F14.c
     devices/alecto.c
+    devices/alps_fwb1u545.c
     devices/ambient_weather.c
     devices/ambientweather_tx8300.c
     devices/ambientweather_wh31e.c
     devices/ant_antplus.c
+    devices/apator_metra_eitn30.c
     devices/apator_metra_erm30.c
     devices/arad_ms_meter.c
     devices/archos_tbh.c
     devices/arexx_ml.c
+    devices/astrostart_2000.c
     devices/atech_ws308.c
+    devices/audiovox_pro_oe3b.c
     devices/auriol_4ld5661.c
     devices/auriol_aft77b2.c
     devices/auriol_afw2a1.c
@@ -85,10 +91,15 @@ add_library(r_433 STATIC
     devices/ced7000.c
     devices/celsia_czc1.c
     devices/chamberlain_cwpirc.c
+    devices/chrysler_car_remote.c
     devices/chuango.c
     devices/cmr113.c
+    devices/code_alarm_car_remote.c
     devices/companion_wtr001.c
+    devices/compustar_1wg3r.c
+    devices/continental_car_remote.c
     devices/cotech_36_7959.c
+    devices/ctt_life_power_hybrid.c
     devices/current_cost.c
     devices/danfoss.c
     devices/deltadore_x3d.c
@@ -136,16 +147,20 @@ add_library(r_433 STATIC
     devices/gasmate_ba1008.c
     devices/ge_coloreffects.c
     devices/geevon.c
+    devices/geevon_tx19.c
     devices/generic_motion.c
     devices/generic_remote.c
     devices/generic_temperature_sensor.c
     devices/geo_minim.c
+    devices/gm_car_remote.c
     devices/govee.c
+    devices/govee_h5059.c
     devices/gridstream.c
     devices/gt_tmbbq05.c
     devices/gt_wt_02.c
     devices/gt_wt_03.c
     devices/hcs200.c
+    devices/hcs361.c
     devices/hideki.c
     devices/holman_ws5029.c
     devices/homelead_hg9901.c
@@ -189,6 +204,7 @@ add_library(r_433 STATIC
     devices/maverick_xr50.c
     devices/mebus.c
     devices/megacode.c
+    devices/mic6sc2_car_remote.c
     devices/missil_ml0757.c
     devices/mueller_hotrod.c
     devices/neptune_r900.c
@@ -197,6 +213,7 @@ add_library(r_433 STATIC
     devices/nexa.c
     devices/nexus.c
     devices/nice_flor_s.c
+    devices/nidec_car_remote.c
     devices/norgo.c
     devices/oil_smart.c
     devices/oil_standard.c
@@ -220,6 +237,7 @@ add_library(r_433 STATIC
     devices/regency_fan.c
     devices/revolt_nc5462.c
     devices/revolt_zx7717.c
+    devices/rfm69_lowpowerlab_moteino.c
     devices/rftech.c
     devices/risco_agility.c
     devices/rojaflex.c
@@ -228,12 +246,15 @@ add_library(r_433 STATIC
     devices/rubicson_48659.c
     devices/rubicson_pool_48942.c
     devices/s3318p.c
+    devices/sainlogic_sa8.c
     devices/schou_72543_rain.c
     devices/schraeder.c
     devices/scmplus.c
     devices/secplus_v1.c
     devices/secplus_v2.c
     devices/sharp_spc775.c
+    devices/shenzhen_wale_wl_th6r.c
+    devices/siemens_5wy72xx.c
     devices/silvercrest.c
     devices/simplisafe.c
     devices/simplisafe_gen3.c
@@ -254,13 +275,16 @@ add_library(r_433 STATIC
     devices/tfa_twin_plus_30.3049.c
     devices/thermopro_tp11.c
     devices/thermopro_tp12.c
+    devices/thermopro_tp211b.c
     devices/thermopro_tp28b.c
     devices/thermopro_tp82xb.c
+    devices/thermopro_tp862b.c
     devices/thermopro_tx2.c
     devices/thermopro_tx2c.c
     devices/thermopro_tx7b.c
     devices/thermor.c
     devices/tpms_abarth124.c
+    devices/tpms_airpuxem.c
     devices/tpms_ave.c
     devices/tpms_bmw.c
     devices/tpms_bmw_g3.c
@@ -280,6 +304,7 @@ add_library(r_433 STATIC
     devices/tpms_renault_0435r.c
     devices/tpms_toyota.c
     devices/tpms_truck.c
+    devices/tpms_trw.c
     devices/tpms_tyreguard400.c
     devices/ts_ft002.c
     devices/ttx201.c
@@ -288,6 +313,7 @@ add_library(r_433 STATIC
     devices/vauno_en8822c.c
     devices/vevor_7in1.c
     devices/visonic_powercode.c
+    devices/wallarge_cltx001.c
     devices/watts_thermostat.c
     devices/waveman.c
     devices/wec2103.c

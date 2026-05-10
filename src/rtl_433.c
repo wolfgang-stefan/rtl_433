@@ -53,6 +53,7 @@
 #include "logger.h"
 #include "fatal.h"
 #include "write_sigrok.h"
+#include "sigmf.h"
 #include "mongoose.h"
 
 #ifdef _WIN32
@@ -407,6 +408,7 @@ static void reset_sdr_callback(r_cfg_t *cfg)
     demod->frame_start_ago   = 0;
     demod->frame_end_ago     = 0;
     demod->frame_event_count = 0;
+    demod->frame_quality     = 0;
 
     demod->min_level_auto = 0.0f;
     demod->noise_level    = 0.0f;
@@ -594,6 +596,11 @@ static void sdr_callback(unsigned char *iq_buf, uint32_t len, void *ctx)
                     r_device device = {.log_fn = log_device_handler, .output_ctx = cfg};
                     pulse_analyzer(&demod->pulse_data, package_type, &device);
                 }
+                if (cfg->grab_mode == 4 && p_events == 0) {
+                    r_device device = {.log_fn = log_device_handler, .output_ctx = cfg};
+                    int p_quality   = pulse_analyzer_check(&demod->pulse_data, package_type, &device);
+                    demod->frame_quality = p_quality > demod->frame_quality ? p_quality : demod->frame_quality;
+                }
 
             } else if (package_type == PULSE_DATA_FSK) {
                 calc_rssi_snr(cfg, &demod->fsk_pulse_data);
@@ -621,6 +628,11 @@ static void sdr_callback(unsigned char *iq_buf, uint32_t len, void *ctx)
                     r_device device = {.log_fn = log_device_handler, .output_ctx = cfg};
                     pulse_analyzer(&demod->fsk_pulse_data, package_type, &device);
                 }
+                if (cfg->grab_mode == 4 && p_events == 0) {
+                    r_device device = {.log_fn = log_device_handler, .output_ctx = cfg};
+                    int p_quality   = pulse_analyzer_check(&demod->fsk_pulse_data, package_type, &device);
+                    demod->frame_quality = p_quality > demod->frame_quality ? p_quality : demod->frame_quality;
+                }
             } // if (package_type == ...
             d_events += p_events;
         } // while (package_type)...
@@ -633,7 +645,8 @@ static void sdr_callback(unsigned char *iq_buf, uint32_t len, void *ctx)
             if (demod->samp_grab) {
                 if (cfg->grab_mode == 1
                         || (cfg->grab_mode == 2 && demod->frame_event_count == 0)
-                        || (cfg->grab_mode == 3 && demod->frame_event_count > 0)) {
+                        || (cfg->grab_mode == 3 && demod->frame_event_count > 0)
+                        || (cfg->grab_mode == 4 && demod->frame_event_count == 0 && demod->frame_quality > 0)) {
                     unsigned frame_pad = n_samples / 8; // this could also be a fixed value, e.g. 10000 samples
                     unsigned start_padded = demod->frame_start_ago + frame_pad;
                     unsigned end_padded = demod->frame_end_ago - frame_pad;
@@ -641,8 +654,9 @@ static void sdr_callback(unsigned char *iq_buf, uint32_t len, void *ctx)
                     samp_grab_write(demod->samp_grab, len_padded, end_padded);
                 }
             }
-            demod->frame_start_ago = 0;
+            demod->frame_start_ago   = 0;
             demod->frame_event_count = 0;
+            demod->frame_quality     = 0;
         }
 
         // dump partial pulse_data for this buffer
@@ -1054,16 +1068,23 @@ static void parse_conf_option(r_cfg_t *cfg, int opt, char *arg)
     case 'S':
         if (!arg)
             usage(1);
+        int grab_fileformat = 0;
+        if (!strncasecmp(arg, "sigmf", 5)) {
+            grab_fileformat = 1;
+            arg = arg_param(arg);
+        }
         if (strcasecmp(arg, "all") == 0)
             cfg->grab_mode = 1;
         else if (strcasecmp(arg, "unknown") == 0)
             cfg->grab_mode = 2;
         else if (strcasecmp(arg, "known") == 0)
             cfg->grab_mode = 3;
+        else if (strcasecmp(arg, "undecoded") == 0)
+            cfg->grab_mode = 4;
         else
             cfg->grab_mode = atobv(arg, 1);
         if (cfg->grab_mode && !cfg->demod->samp_grab)
-            cfg->demod->samp_grab = samp_grab_create(SIGNAL_GRABBER_BUFFER);
+            cfg->demod->samp_grab = samp_grab_create(SIGNAL_GRABBER_BUFFER, grab_fileformat);
         break;
     case 'm':
         fprintf(stderr, "sample mode option is deprecated.\n");
@@ -1887,7 +1908,18 @@ int main(int argc, char **argv) {
             cfg->center_frequency = demod->load_info.center_frequency ? demod->load_info.center_frequency : cfg->frequency[0];
 
             FILE *in_file;
-            if (strcmp(demod->load_info.path, "-") == 0) { // read samples from stdin
+            if (demod->load_info.container == FILEFMT_SIGMF) { // unpack tar
+                sigmf_t sigmf = {0};
+                int rc = sigmf_reader_open(&sigmf, cfg->in_filename);
+                // handle errors
+                print_logf(LOG_INFO, "Input", "Opening returned \"%d\"", rc);
+                // copy meta
+                demod->load_info.format = CU8_IQ;
+                cfg->samp_rate          = sigmf.sample_rate;
+                cfg->center_frequency   = sigmf.first_frequency;
+                in_file                 = sigmf.mtar.stream;
+            }
+            else if (strcmp(demod->load_info.path, "-") == 0) { // read samples from stdin
                 in_file = stdin;
                 cfg->in_filename = "<stdin>";
             } else {
@@ -1920,7 +1952,7 @@ int main(int argc, char **argv) {
             // special case for pulse data file-inputs
             if (demod->load_info.format == PULSE_OOK) {
                 while (!cfg->exit_async) {
-                    pulse_data_load(in_file, &demod->pulse_data, cfg->samp_rate);
+                    pulse_data_load(in_file, &demod->now, &demod->pulse_data, cfg->samp_rate);
                     if (!demod->pulse_data.num_pulses)
                         break;
 
@@ -2072,7 +2104,7 @@ int main(int argc, char **argv) {
 
     time(&cfg->hop_start_time);
 
-    // add dummy socket to receive broadcasts
+    // add dummy socket to receive timer broadcasts
     struct mg_add_sock_opts opts = {.user_data = cfg};
     struct mg_connection *nc = mg_add_sock_opt(get_mgr(cfg), INVALID_SOCKET, timer_handler, opts);
     // Send us MG_EV_TIMER event after 2.5 seconds
